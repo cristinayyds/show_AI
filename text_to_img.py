@@ -3,7 +3,7 @@ import json
 from PIL import Image
 from io import BytesIO
 import streamlit as st
-from googletrans import Translator  # 导入Google翻译库
+from deep_translator import GoogleTranslator  # 使用兼容库代替 googletrans
 import re
 
 # 设置API URL和密钥
@@ -74,11 +74,8 @@ with tab1:
     prompt_chinese = st.text_input("请输入描述信息 (Prompt)", "一只猫在沙发上睡觉。")
 
     # 翻译中文为英文
-    translator = Translator()
-
     def translate_to_english(text):
-        translated = translator.translate(text, src='zh-CN', dest='en')
-        return translated.text
+        return GoogleTranslator(source='zh', target='en').translate(text)
 
     def generate_image(prompt):
         url = "https://api.lightai.io/ideogram/generate"
@@ -152,7 +149,7 @@ with tab2:
                 mime_type = "image/png"
             else:
                 mime_type = "image/jpeg"
-            
+
             data_url = f"data:{mime_type};base64,{image_base64}"
 
             url_chat = "https://api.lightai.io/v1/chat/completions"
@@ -180,7 +177,6 @@ with tab2:
 
             if response.status_code == 200:
                 content = response.json()['choices'][0]['message'].get('content', '')
-                import re
                 match = re.search(r'https://[\S]+\.(jpg|jpeg|png|gif)', content)
                 if match:
                     result_url = match.group(0)
@@ -193,4 +189,3 @@ with tab2:
                     st.warning("未返回图像链接。")
             else:
                 st.error("图像编辑请求失败。")
-
