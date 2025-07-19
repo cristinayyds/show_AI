@@ -75,8 +75,7 @@ with tab1:
 
     # 翻译中文为英文
     def translate_to_english(text):
-        return GoogleTranslator(source='zh', target='en').translate(text)
-
+        return GoogleTranslator(source='chinese', target='english').translate(text)
     def generate_image(prompt):
         url = "https://api.lightai.io/ideogram/generate"
         payload = json.dumps({
